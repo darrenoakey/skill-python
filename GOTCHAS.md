@@ -58,6 +58,7 @@
 - Homebrew Python code-signing breakage: `brew upgrade` can leave invalid Team IDs. Fix: `brew reinstall python@3.XX`.
 
 ## ML / AI Models
+- SadTalker/basicsr on Python 3.12+: `basicsr.data.degradations` imports `torchvision.transforms.functional_tensor` (removed in torchvision 0.25). Patch to `torchvision.transforms.functional`. Also `np.float` removed in numpy 2.x — patch `my_awing_arch.py` to use `float`. And `np.array()` with inhomogeneous shapes in `preprocess.py` — use `.item()` on numpy scalars.
 - Neural network integration: always check original training code's input normalization. Mismatched ranges cause brightness/contrast corruption.
 - Long-running ML generation: use subprocess-per-chunk for memory isolation. MLX/PyTorch leak memory across iterations. Save `.npy` intermediates for resume.
 - HuggingFace MLX Community Whisper repos use `-mlx` suffix. Exception: `whisper-large-v3-turbo` has no suffix.
