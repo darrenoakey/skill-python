@@ -170,6 +170,23 @@ def main() -> int:
 
 ---
 
+## Async / asyncio Gotchas
+
+- **Never cache an `asyncio.Semaphore`/`Lock`/`Event`/`Queue` as a module-level singleton if the program calls `asyncio.run()` more than once.** These primitives bind to the event loop alive when they are *first awaited*; the second `asyncio.run()` creates a NEW loop, and reusing the old object raises `RuntimeError: <Semaphore …> is bound to a different event loop`. Classic trigger: a multi-step CLI/pipeline where each step is its own `asyncio.run(step())` but they share a global `_sem` (e.g. an LLM concurrency limiter). Fix: build the primitive lazily **per running loop** —
+  ```python
+  _sems: dict = {}
+  def _semaphore() -> asyncio.Semaphore:
+      loop = asyncio.get_running_loop()
+      sem = _sems.get(loop)
+      if sem is None:
+          sem = asyncio.Semaphore(N)
+          _sems[loop] = sem
+      return sem
+  ```
+  — or create it inside the top-level coroutine and thread it down. (Prefer one `asyncio.run()` per process where you can; this bug is a symptom of many.)
+
+---
+
 ## Secrets & Configuration
 
 **Secrets**
