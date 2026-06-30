@@ -343,7 +343,7 @@ exec ~/src/myproject/run "$@"
 import os, subprocess, sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).parent.resolve()
+SCRIPT_DIR = Path(__file__).resolve().parent
 VENV = SCRIPT_DIR / ".venv"
 REQS = SCRIPT_DIR / "requirements.txt"
 PYTHON = VENV / "bin" / "python"
