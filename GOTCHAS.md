@@ -23,6 +23,7 @@
 - `UPDATE ... SET x = ?` on a table with `UNIQUE(name, x)` will fail if the target already has that name. When merging parent entities, find-or-merge children first, then reassign remaining, then delete the source parent.
 
 ## Playwright / Testing
+- `dazpycheck` can report misleadingly low per-file coverage when its in-process pytest cannot load an installed plugin: it catches the plugin's `ImportError`, falls back to unittest, imports a pytest-style test module without executing its functions, and measures only import-time source lines (26.67% observed). Reproduce with `python -c 'from dazpycheck.main import run_test_on_file; print(run_test_on_file("./x_test.py"))'`, then run pytest under the same interpreter to expose the missing plugin dependency. Repair the test-tool environment; do not weaken tests or rewrite them for the unittest fallback.
 - `page.goto()` defaults to `wait_until="load"` which waits for ALL resources. Use `wait_until="domcontentloaded"` for heavy image grids.
 - `expect()` has its own timeout separate from `page.set_default_timeout()`. Use `expect.set_options(timeout=N)` to configure assertion timeouts globally.
 - E2E: when a click triggers an API fetch that updates DOM, use `page.expect_response(lambda r: ...)` as context manager around the click.

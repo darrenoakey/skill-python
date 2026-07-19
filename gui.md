@@ -404,7 +404,7 @@ Use `~/bin/generate_image` to create application icons:
 ```
 
 **Critical notes about image generation:**
-- `generate_image` outputs JPG files regardless of the `--output` extension specified. Always reference the generated file as `.jpg` in the remove-background step.
+- `generate_image` writes the requested output path using the canonical service artifact format; use the path it reports and verify the actual file format before any follow-up processing. Do not assume PNG requests become JPG files.
 - Never use `--steps` parameter - let the tool use its default.
 - Image generation takes 1-3 minutes per image. This is normal.
 - Never run `generate_image` in parallel - it's too memory-intensive.
